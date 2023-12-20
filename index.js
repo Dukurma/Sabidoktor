@@ -2,12 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const dotenv = require('dotenv');
+const cors = require('cors'); // Add this line
 
 dotenv.config();
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+app.use(cors()); // Add this line
 
 class SabiDoktor {
   constructor() {
@@ -18,7 +20,7 @@ class SabiDoktor {
     try {
       // Call OpenAI API to generate a response
       const response = await this.generateOpenAIResponse(message);
-      
+
       // Add additional logic for processing the response if needed
       return `User: ${message}\nSabiDoktor: ${response}`;
     } catch (error) {
@@ -29,7 +31,7 @@ class SabiDoktor {
 
   async generateOpenAIResponse(prompt) {
     const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
-    
+
     try {
       const response = await axios.post(apiUrl, {
         prompt: prompt,
@@ -41,8 +43,7 @@ class SabiDoktor {
         }
       });
 
-      return (response.data.choices[0] && response.data.choices[0].text.trim()) || 'No response from SabiDoktor';
-;
+      return response.data.choices[0]?.text.trim() || 'No response from SabiDoktor';
     } catch (error) {
       console.error('Error generating response from OpenAI:', error.message);
       return 'Error generating response from OpenAI';
