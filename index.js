@@ -43,7 +43,8 @@ class SabiDoktor {
         }
       });
 
-      return response.data.choices[0]?.text.trim() || 'No response from SabiDoktor';
+      return (response.data.choices[0] && response.data.choices[0].text.trim()) || 'No response from SabiDoktor';
+
     } catch (error) {
       console.error('Error generating response from OpenAI:', error.message);
       return 'Error generating response from OpenAI';
